@@ -33,3 +33,4 @@ Note: `./gradlew build` includes lint checks (mostly missing translations warnin
 ## Agent Rules
 - Update @.cursor/rules/overview.mdc to reflect structural changes. Keep it as a concise index.
 - Modify @.claude/settings.local.json for permission updates. A restart of Claude Code is required to take effect.
+- For temporary files, always use `./tmp` folder under project root to avoid sandbox permission issues. Do not use `/tmp` or other system temp directories.
