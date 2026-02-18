@@ -38,7 +38,7 @@ public class ColorPickerDialog {
                         })
                 .setNegativeButton(context.getString(android.R.string.cancel),
                         (dialogInterface, i) -> dialogInterface.dismiss())
-                .attachAlphaSlideBar(false)
+                .attachAlphaSlideBar(true)
                 .attachBrightnessSlideBar(true)
                 .setBottomSpace(12)
                 .show();
