@@ -74,6 +74,7 @@ public final class PrefMgr {
     public static final String DISABLE_SECURITY_WHEN_UNHIDDEN = "disableSecurityWhenUnhidden";
     public static final String HIDE_FROM_RECENTS = "hideFromRecents";
     public static final String UPDATE_CHANNEL = "updateChannel";
+    public static final String THEME_MODE = "themeMode";
 
     public static Set<String> getHideFilePath() {
         // Return a defensive copy to avoid SharedPreferences caching issues
@@ -370,6 +371,27 @@ public final class PrefMgr {
 
     public static void setUpdateChannel(UpdateUtil.UpdateChannel channel) {
         mPrefEditor.putString(UPDATE_CHANNEL, channel.name());
+        mPrefEditor.apply();
+    }
+
+    /**
+     * Get theme mode preference.
+     * @return Theme mode: -1 for system default, 1 for light, 2 for dark
+     * These values correspond to AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+     * MODE_NIGHT_NO, and MODE_NIGHT_YES respectively.
+     */
+    public static int getThemeMode() {
+        return mPrefs.getInt(THEME_MODE, -1); // Default: follow system (-1)
+    }
+
+    /**
+     * Set theme mode preference.
+     * @param mode Theme mode: -1 for system default, 1 for light, 2 for dark
+     * These values correspond to AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+     * MODE_NIGHT_NO, and MODE_NIGHT_YES respectively.
+     */
+    public static void setThemeMode(int mode) {
+        mPrefEditor.putInt(THEME_MODE, mode);
         mPrefEditor.apply();
     }
 }
