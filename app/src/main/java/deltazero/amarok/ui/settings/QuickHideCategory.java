@@ -1,6 +1,5 @@
 package deltazero.amarok.ui.settings;
 
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -116,6 +115,7 @@ public class QuickHideCategory extends BaseCategory {
             new ColorPickerDialog.Builder(activity)
                     .setTitle(R.string.panic_button_color)
                     .setCurrentColor(PrefMgr.getPanicButtonColor())
+                    .setPreferenceName("PanicButtonColorPicker")
                     .setOnColorSelectedListener(color -> {
                         PrefMgr.setPanicButtonColor(color);
                         QuickHideService.startService(activity); // Restart service to apply color

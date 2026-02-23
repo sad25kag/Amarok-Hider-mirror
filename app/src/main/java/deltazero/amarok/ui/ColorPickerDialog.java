@@ -6,13 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 
-import deltazero.amarok.R;
-
 public class ColorPickerDialog {
 
     private final Context context;
     private final String title;
     private final int currentColor;
+    private final String preferenceName;
     private final OnColorSelectedListener listener;
 
     public interface OnColorSelectedListener {
@@ -23,13 +22,14 @@ public class ColorPickerDialog {
         this.context = builder.context;
         this.title = builder.title;
         this.currentColor = builder.currentColor;
+        this.preferenceName = builder.preferenceName;
         this.listener = builder.listener;
     }
 
     public void show() {
-        new com.skydoves.colorpickerview.ColorPickerDialog.Builder(context)
+        var builder = new com.skydoves.colorpickerview.ColorPickerDialog.Builder(context)
                 .setTitle(title)
-                .setPreferenceName("PanicButtonColorPicker")
+                .setPreferenceName(preferenceName)
                 .setPositiveButton(context.getString(android.R.string.ok),
                         (ColorEnvelopeListener) (envelope, fromUser) -> {
                             if (listener != null) {
@@ -40,14 +40,16 @@ public class ColorPickerDialog {
                         (dialogInterface, i) -> dialogInterface.dismiss())
                 .attachAlphaSlideBar(true)
                 .attachBrightnessSlideBar(true)
-                .setBottomSpace(12)
-                .show();
+                .setBottomSpace(12);
+        builder.getColorPickerView().setInitialColor(currentColor);
+        builder.show();
     }
 
     public static class Builder {
         private final Context context;
         private String title = "";
         private int currentColor = 0xFFD1D1D1;
+        private String preferenceName = null;
         private OnColorSelectedListener listener;
 
         public Builder(@NonNull Context context) {
@@ -66,6 +68,11 @@ public class ColorPickerDialog {
 
         public Builder setCurrentColor(int color) {
             this.currentColor = color;
+            return this;
+        }
+
+        public Builder setPreferenceName(String preferenceName) {
+            this.preferenceName = preferenceName;
             return this;
         }
 

@@ -62,6 +62,7 @@ public class QuickHideService extends LifecycleService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        skipSavePositionOnStop = false;
 
         // Start foreground
         Notification notification =
@@ -181,24 +182,18 @@ public class QuickHideService extends LifecycleService {
 
     private void savePanicButtonPosition() {
         if (panicButton != null) {
-            PrefMgr.setPanicButtonX(panicButton.getWindowParams().x);
-            PrefMgr.setPanicButtonY(panicButton.getWindowParams().y);
-            PrefMgr.setPanicButtonGravity(panicButton.getWindowParams().gravity);
-            Log.d("QuickHideService", "Saved panic button position: x=" + panicButton.getWindowParams().x + ", y=" + panicButton.getWindowParams().y + ", gravity=" + panicButton.getWindowParams().gravity);
+            var params = panicButton.getWindowParams();
+            PrefMgr.setPanicButtonPosition(params.x, params.y, params.gravity);
         }
     }
 
     private void restorePanicButtonPosition() {
-        int savedX = PrefMgr.getPanicButtonX();
-        int savedY = PrefMgr.getPanicButtonY();
-        int savedGravity = PrefMgr.getPanicButtonGravity();
-        
-        if (savedX != -1 && savedY != -1 && savedGravity != -1) {
-            panicButton.getWindowParams().x = savedX;
-            panicButton.getWindowParams().y = savedY;
-            panicButton.getWindowParams().gravity = savedGravity;
+        int[] pos = PrefMgr.getPanicButtonPosition();
+        if (pos != null) {
+            panicButton.getWindowParams().x = pos[0];
+            panicButton.getWindowParams().y = pos[1];
+            panicButton.getWindowParams().gravity = pos[2];
             panicButton.update();
-            Log.d("QuickHideService", "Restored panic button position: x=" + savedX + ", y=" + savedY + ", gravity=" + savedGravity);
         }
     }
 }

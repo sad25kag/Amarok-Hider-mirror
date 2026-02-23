@@ -386,29 +386,18 @@ public final class PrefMgr {
         mPrefEditor.apply();
     }
 
-    public static int getPanicButtonX() {
-        return mPrefs.getInt(PANIC_BUTTON_X, -1); // -1 means not set, use default
+    /** Returns saved position as {x, y, gravity}, or null if no position was saved. */
+    public static int[] getPanicButtonPosition() {
+        int x = mPrefs.getInt(PANIC_BUTTON_X, -1);
+        int y = mPrefs.getInt(PANIC_BUTTON_Y, -1);
+        int gravity = mPrefs.getInt(PANIC_BUTTON_GRAVITY, -1);
+        if (x == -1 && y == -1 && gravity == -1) return null;
+        return new int[]{x, y, gravity};
     }
 
-    public static void setPanicButtonX(int x) {
+    public static void setPanicButtonPosition(int x, int y, int gravity) {
         mPrefEditor.putInt(PANIC_BUTTON_X, x);
-        mPrefEditor.apply();
-    }
-
-    public static int getPanicButtonY() {
-        return mPrefs.getInt(PANIC_BUTTON_Y, -1); // -1 means not set, use default
-    }
-
-    public static void setPanicButtonY(int y) {
         mPrefEditor.putInt(PANIC_BUTTON_Y, y);
-        mPrefEditor.apply();
-    }
-
-    public static int getPanicButtonGravity() {
-        return mPrefs.getInt(PANIC_BUTTON_GRAVITY, -1); // -1 means not set, use default
-    }
-
-    public static void setPanicButtonGravity(int gravity) {
         mPrefEditor.putInt(PANIC_BUTTON_GRAVITY, gravity);
         mPrefEditor.apply();
     }
