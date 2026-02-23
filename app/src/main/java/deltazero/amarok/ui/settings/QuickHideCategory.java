@@ -94,8 +94,8 @@ public class QuickHideCategory extends BaseCategory {
                 });
             } else {
                 // Reset position when panic button is disabled
-                PrefMgr.resetPanicButtonPosition();
-                QuickHideService.startService(activity); // Restart service
+                QuickHideService.stopServiceAndResetPosition(activity);
+                QuickHideService.startService(activity);
             }
             return true;
         });

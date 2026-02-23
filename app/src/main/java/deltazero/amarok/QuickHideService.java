@@ -35,6 +35,7 @@ public class QuickHideService extends LifecycleService {
     private static final int NOTIFICATION_ID = 1;
 
     private static boolean isServiceRunning = false;
+    private static boolean skipSavePositionOnStop = false;
 
     @Override
     public void onCreate() {
@@ -129,6 +130,12 @@ public class QuickHideService extends LifecycleService {
         context.stopService(new Intent(context, QuickHideService.class));
     }
 
+    public static void stopServiceAndResetPosition(Context context) {
+        skipSavePositionOnStop = true;
+        stopService(context);
+        PrefMgr.resetPanicButtonPosition();
+    }
+
     private void updatePanicButton() {
         if (!PrefMgr.getEnablePanicButton())
             return;
@@ -163,8 +170,11 @@ public class QuickHideService extends LifecycleService {
 
     private void cancelPanicButton() {
         if (panicButton != null && panicButton.isShowing()) {
-            // Save position before hiding
-            savePanicButtonPosition();
+            // Save position before hiding, unless a reset was requested
+            if (!skipSavePositionOnStop) {
+                savePanicButtonPosition();
+            }
+            skipSavePositionOnStop = false;
             panicButton.cancel();
         }
     }
