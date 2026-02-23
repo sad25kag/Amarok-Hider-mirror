@@ -92,6 +92,9 @@ public class QuickHideService extends LifecycleService {
         ivPanicButton.setColorFilter(PrefMgr.getPanicButtonColor(),
                 PorterDuff.Mode.SRC_IN);
 
+        // Restore saved position if available
+        restorePanicButtonPosition();
+
         Hider.state.observe(this, state -> updatePanicButton());
         updatePanicButton();
 
@@ -160,7 +163,32 @@ public class QuickHideService extends LifecycleService {
 
     private void cancelPanicButton() {
         if (panicButton != null && panicButton.isShowing()) {
+            // Save position before hiding
+            savePanicButtonPosition();
             panicButton.cancel();
+        }
+    }
+
+    private void savePanicButtonPosition() {
+        if (panicButton != null) {
+            PrefMgr.setPanicButtonX(panicButton.getWindowParams().x);
+            PrefMgr.setPanicButtonY(panicButton.getWindowParams().y);
+            PrefMgr.setPanicButtonGravity(panicButton.getWindowParams().gravity);
+            Log.d("QuickHideService", "Saved panic button position: x=" + panicButton.getWindowParams().x + ", y=" + panicButton.getWindowParams().y + ", gravity=" + panicButton.getWindowParams().gravity);
+        }
+    }
+
+    private void restorePanicButtonPosition() {
+        int savedX = PrefMgr.getPanicButtonX();
+        int savedY = PrefMgr.getPanicButtonY();
+        int savedGravity = PrefMgr.getPanicButtonGravity();
+        
+        if (savedX != -1 && savedY != -1 && savedGravity != -1) {
+            panicButton.getWindowParams().x = savedX;
+            panicButton.getWindowParams().y = savedY;
+            panicButton.getWindowParams().gravity = savedGravity;
+            panicButton.update();
+            Log.d("QuickHideService", "Restored panic button position: x=" + savedX + ", y=" + savedY + ", gravity=" + savedGravity);
         }
     }
 }

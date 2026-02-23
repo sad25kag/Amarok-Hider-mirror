@@ -75,6 +75,9 @@ public final class PrefMgr {
     public static final String HIDE_FROM_RECENTS = "hideFromRecents";
     public static final String UPDATE_CHANNEL = "updateChannel";
     public static final String PANIC_BUTTON_COLOR = "panicButtonColor";
+    public static final String PANIC_BUTTON_X = "panicButtonX";
+    public static final String PANIC_BUTTON_Y = "panicButtonY";
+    public static final String PANIC_BUTTON_GRAVITY = "panicButtonGravity";
 
     public static Set<String> getHideFilePath() {
         // Return a defensive copy to avoid SharedPreferences caching issues
@@ -380,6 +383,40 @@ public final class PrefMgr {
 
     public static void setPanicButtonColor(int color) {
         mPrefEditor.putInt(PANIC_BUTTON_COLOR, color);
+        mPrefEditor.apply();
+    }
+
+    public static int getPanicButtonX() {
+        return mPrefs.getInt(PANIC_BUTTON_X, -1); // -1 means not set, use default
+    }
+
+    public static void setPanicButtonX(int x) {
+        mPrefEditor.putInt(PANIC_BUTTON_X, x);
+        mPrefEditor.apply();
+    }
+
+    public static int getPanicButtonY() {
+        return mPrefs.getInt(PANIC_BUTTON_Y, -1); // -1 means not set, use default
+    }
+
+    public static void setPanicButtonY(int y) {
+        mPrefEditor.putInt(PANIC_BUTTON_Y, y);
+        mPrefEditor.apply();
+    }
+
+    public static int getPanicButtonGravity() {
+        return mPrefs.getInt(PANIC_BUTTON_GRAVITY, -1); // -1 means not set, use default
+    }
+
+    public static void setPanicButtonGravity(int gravity) {
+        mPrefEditor.putInt(PANIC_BUTTON_GRAVITY, gravity);
+        mPrefEditor.apply();
+    }
+
+    public static void resetPanicButtonPosition() {
+        mPrefEditor.putInt(PANIC_BUTTON_X, -1);
+        mPrefEditor.putInt(PANIC_BUTTON_Y, -1);
+        mPrefEditor.putInt(PANIC_BUTTON_GRAVITY, -1);
         mPrefEditor.apply();
     }
 }
