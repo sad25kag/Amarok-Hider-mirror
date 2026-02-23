@@ -81,10 +81,10 @@ public class QuickHideService extends LifecycleService {
         }
         isServiceRunning = true;
 
-        // Init panic button
+        // Init panic button (use TOP|START so coords match the library's post-drag system)
         panicButton = new EasyWindow<>(getApplication())
                 .setContentView(R.layout.dialog_panic_button)
-                .setGravity(Gravity.END | Gravity.BOTTOM)
+                .setGravity(Gravity.TOP | Gravity.START)
                 .setYOffset(300)
                 .setDraggable(new SpringBackDraggable())
                 .setOnClickListener(R.id.dialog_iv_panic_button,
@@ -183,17 +183,20 @@ public class QuickHideService extends LifecycleService {
     private void savePanicButtonPosition() {
         if (panicButton != null) {
             var params = panicButton.getWindowParams();
-            PrefMgr.setPanicButtonPosition(params.x, params.y, params.gravity);
+            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            boolean isLeftEdge = params.x < screenWidth / 2;
+            PrefMgr.setPanicButtonPosition(params.y, isLeftEdge);
         }
     }
 
     private void restorePanicButtonPosition() {
         int[] pos = PrefMgr.getPanicButtonPosition();
         if (pos != null) {
-            panicButton.getWindowParams().x = pos[0];
-            panicButton.getWindowParams().y = pos[1];
-            panicButton.getWindowParams().gravity = pos[2];
-            panicButton.update();
+            int y = pos[0];
+            boolean isLeftEdge = pos[1] == 1;
+            panicButton.setYOffset(y);
+            // Large offset clamps to the right edge; Integer.MAX_VALUE overflows in WindowManager.
+            panicButton.setXOffset(isLeftEdge ? 0 : 10000);
         }
     }
 }

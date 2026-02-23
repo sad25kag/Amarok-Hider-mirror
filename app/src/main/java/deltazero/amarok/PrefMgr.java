@@ -75,9 +75,8 @@ public final class PrefMgr {
     public static final String HIDE_FROM_RECENTS = "hideFromRecents";
     public static final String UPDATE_CHANNEL = "updateChannel";
     public static final String PANIC_BUTTON_COLOR = "panicButtonColor";
-    public static final String PANIC_BUTTON_X = "panicButtonX";
     public static final String PANIC_BUTTON_Y = "panicButtonY";
-    public static final String PANIC_BUTTON_GRAVITY = "panicButtonGravity";
+    public static final String PANIC_BUTTON_LEFT_EDGE = "panicButtonLeftEdge";
 
     public static Set<String> getHideFilePath() {
         // Return a defensive copy to avoid SharedPreferences caching issues
@@ -386,26 +385,22 @@ public final class PrefMgr {
         mPrefEditor.apply();
     }
 
-    /** Returns saved position as {x, y, gravity}, or null if no position was saved. */
     public static int[] getPanicButtonPosition() {
-        int x = mPrefs.getInt(PANIC_BUTTON_X, -1);
         int y = mPrefs.getInt(PANIC_BUTTON_Y, -1);
-        int gravity = mPrefs.getInt(PANIC_BUTTON_GRAVITY, -1);
-        if (x == -1 && y == -1 && gravity == -1) return null;
-        return new int[]{x, y, gravity};
+        if (y == -1) return null;
+        boolean isLeftEdge = mPrefs.getBoolean(PANIC_BUTTON_LEFT_EDGE, false);
+        return new int[]{y, isLeftEdge ? 1 : 0};
     }
 
-    public static void setPanicButtonPosition(int x, int y, int gravity) {
-        mPrefEditor.putInt(PANIC_BUTTON_X, x);
+    public static void setPanicButtonPosition(int y, boolean isLeftEdge) {
         mPrefEditor.putInt(PANIC_BUTTON_Y, y);
-        mPrefEditor.putInt(PANIC_BUTTON_GRAVITY, gravity);
+        mPrefEditor.putBoolean(PANIC_BUTTON_LEFT_EDGE, isLeftEdge);
         mPrefEditor.apply();
     }
 
     public static void resetPanicButtonPosition() {
-        mPrefEditor.putInt(PANIC_BUTTON_X, -1);
         mPrefEditor.putInt(PANIC_BUTTON_Y, -1);
-        mPrefEditor.putInt(PANIC_BUTTON_GRAVITY, -1);
+        mPrefEditor.remove(PANIC_BUTTON_LEFT_EDGE);
         mPrefEditor.apply();
     }
 }
