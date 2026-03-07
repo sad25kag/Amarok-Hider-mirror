@@ -95,8 +95,8 @@ public class MainActivity extends AmarokActivity {
                     .show();
         });
 
-        // Check for updates
-        if (PrefMgr.getEnableAutoUpdate()) {
+        // Check for updates (no-op for store-managed builds)
+        if (UpdateUtil.isAvailable() && PrefMgr.getEnableAutoUpdate()) {
             UpdateUtil.checkAndNotify(this, true);
         }
     }
